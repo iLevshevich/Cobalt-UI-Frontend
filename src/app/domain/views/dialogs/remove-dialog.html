@@ -1,0 +1,49 @@
+<div mat-dialog-title
+     class="remove-dialog__title">
+  <i class="remove-dialog__title_icon fa fa-3x fa-exclamation fa-pull-left"></i>
+  <p class="remove-dialog__title_message text-default">
+    <strong>{{'RemoveDialogTitleQuestion' | translate}}</strong>
+    <br>
+    <em>{{'RemoveDialogTitleConfirm' | translate}}</em>
+  </p>
+</div>
+<div mat-dialog-content
+     class="remove-dialog__body text-default">
+  <dl class="dl-horizontal">
+    <dt>{{'Type' | translate}}:</dt>
+    <dd>
+      <em class="text-info">{{getType() | type}}</em>
+    </dd>
+    <dt>{{'Description' | translate}}:</dt>
+    <dd>
+      <em class="text-info">{{getDescription()}}</em>
+    </dd>
+  </dl>
+</div>
+<div mat-dialog-actions
+     class="remove-dialog__actions">
+  <div class="remove-dialog__actions_group text-right">
+    <button mat-raised-button
+            matTooltip="{{ 'Confirm' | translate }}"
+            matTooltipPosition="above"
+            matTooltipShowDelay="500"
+            matTooltipHideDelay="1000"
+            color="warn"
+            (click)="onOk()">
+      <i class="fa fa-check"
+         aria-hidden="true"></i>
+      {{'Confirm' | translate}}
+    </button>
+    <button mat-raised-button cdkFocusInitial
+            matTooltip="{{ 'Cancel' | translate }}"
+            matTooltipPosition="above"
+            matTooltipShowDelay="500"
+            matTooltipHideDelay="1000"
+            color="primary"
+            (click)="onCancel()">
+      <i class="fa fa-times"
+         aria-hidden="true"></i>
+      {{'Cancel' | translate}}
+    </button>
+  </div>
+</div>

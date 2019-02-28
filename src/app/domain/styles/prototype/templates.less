@@ -1,0 +1,169 @@
+.media(@screen, @rules) {
+  /*
+      Smartphones (portrait and landscape)
+  */
+  & when (@screen = SmartphonesPL) {
+    @media only screen
+    and (min-device-width: 320px)
+    and (max-device-width: 480px) {
+      @rules();
+    }
+  }
+
+  /*
+      Smartphones (landscape)
+  */
+  & when (@screen = SmartphonesL) {
+    @media only screen
+    and (min-width: 321px) {
+      @rules();
+    }
+  }
+
+  /*
+      Smartphones (portrait)
+  */
+  & when (@screen = SmartphonesP) {
+    @media only screen
+    and (max-width: 320px) {
+      @rules();
+    }
+  }
+
+  /*
+      Galaxy S3
+  */
+  & when (@screen = Galaxy) {
+    @media only screen
+    and (max-width: 640px) {
+      @rules();
+    }
+  }
+
+  /*
+      Galaxy S3 (portrait)
+  */
+  & when (@screen = GalaxyP) {
+    @media only screen
+    and (min-device-width: 360px)
+    and (max-device-width: 640px)
+    and (orientation: portrait) {
+      @rules();
+    }
+  }
+
+  /*
+      Galaxy S3 (landscape)
+  */
+  & when (@screen = GalaxyL) {
+    @media only screen
+    and (min-device-width: 360px)
+    and (max-device-width: 640px)
+    and (orientation: landscape) {
+      @rules();
+    }
+  }
+
+  /*
+      Galaxy S3 (portrait and landscape)
+  */
+  & when (@screen = GalaxyPL) {
+    @media only screen
+    and (min-device-width: 360px)
+    and (max-device-width: 640px) {
+      @rules();
+    }
+  }
+
+  /*
+      iPads
+  */
+  & when (@screen = iPads) {
+    @media only screen
+    and (max-width: 1024px) {
+      @rules();
+    }
+  }
+
+  /*
+      iPads (portrait and landscape)
+  */
+  & when (@screen = iPadsPL) {
+    @media only screen
+    and (min-device-width: 768px)
+    and (max-device-width: 1024px) {
+      @rules();
+    }
+  }
+
+  /*
+      iPads (landscape)
+  */
+  & when (@screen = iPadsL) {
+    @media only screen
+    and (min-device-width: 768px)
+    and (max-device-width: 1024px)
+    and (orientation: landscape) {
+      @rules();
+    }
+  }
+
+  /*
+      iPads (portrait)
+  */
+  & when (@screen = iPadsP) {
+    @media only screen
+    and (min-device-width: 768px)
+    and (max-device-width: 1024px)
+    and (orientation: portrait) {
+      @rules();
+    }
+  }
+
+  /*
+      Desktops and laptops
+  */
+  & when (@screen = Desktops) {
+    @media only screen
+    and (min-width: 1224px) {
+      @rules();
+    }
+  }
+
+  /*
+      Large screens
+  */
+  & when (@screen = Large) {
+    @media only screen
+    and (min-width: 1824px) {
+      @rules();
+    }
+  }
+
+  /*
+      iPhone 4 - 5s
+  */
+  & when (@screen = iPhone4) {
+    @media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-device-pixel-ratio: 1.5) {
+      @rules();
+    }
+  }
+
+  /*
+      iPhone 6
+  */
+  & when (@screen = iPhone6) {
+    @media only screen and (max-device-width: 667px), only screen and (-webkit-device-pixel-ratio: 2) {
+      @rules();
+    }
+  }
+
+  /*
+      iPhone 6+
+  */
+  & when (@screen = iPhone6_) {
+    @media only screen and (min-device-width: 414px), only screen and (-webkit-device-pixel-ratio: 3) {
+      @rules();
+    }
+  }
+}

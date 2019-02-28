@@ -1,0 +1,369 @@
+<div mat-dialog-title
+     class="add-dialog__title">
+  <p class="add-dialog__title_message text-default text-center">
+    <strong>{{'AddDialogTitle' | translate}}</strong>
+  </p>
+</div>
+<div mat-dialog-content
+     class="add-dialog__body text-default">
+  <mat-vertical-stepper [linear]="true" #stepper>
+    <ng-template matStepperIcon="create">
+      <i class="fa fa-pen add-dialog__icon_size"
+         aria-hidden="true"></i>
+    </ng-template>
+    <ng-template matStepperIcon="done">
+      <i class="fa fa-check add-dialog__icon_size"
+         aria-hidden="true"></i>
+    </ng-template>
+    <ng-template matStepperIcon="edit">
+      <i class="fa fa-pencil add-dialog__icon_size"
+         aria-hidden="true"></i>
+    </ng-template>
+
+    <mat-step [stepControl]="typeForm">
+      <form [formGroup]="typeForm">
+        <ng-template matStepLabel>
+          <em class="text-primary">{{'AddDialogTitleType' | translate}}</em>
+        </ng-template>
+
+        <mat-form-field class="add-dialog__field_size">
+          <mat-label>{{'Type' | translate}}</mat-label>
+          <select matNativeControl required
+                  (change)="OnSelectTypeChange()"
+                  formControlName="type">
+            <option value="" disabled selected></option>
+            <option *ngFor="let element of getTypes()"
+                    [value]="element">
+              {{element | type}}
+            </option>
+          </select>
+        </mat-form-field>
+
+        <div class="text-right">
+          <button mat-raised-button
+                  [disabled]="typeForm.invalid"
+                  [ngClass]="{'add-dialog__button_disabled': typeForm.invalid}"
+                  color="primary"
+                  matTooltip="{{ 'Next' | translate }}"
+                  matTooltipShowDelay="500"
+                  matTooltipHideDelay="1000"
+                  matStepperNext>
+            <i class="fa fa-forward"
+               aria-hidden="true"></i>
+            {{ 'Next' | translate }}
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="descriptionForm">
+      <form [formGroup]="descriptionForm">
+        <ng-template matStepLabel>
+          <em class="text-primary">{{'AddDialogTitleDescription' | translate}}</em>
+        </ng-template>
+
+        <mat-form-field class="add-dialog__field_size">
+          <input matInput #description
+                 maxlength="100"
+                 minlength="3"
+                 placeholder="{{'Description' | translate}}"
+                 formControlName="description" required>
+          <mat-hint align="end">{{description.value.length}} / 100</mat-hint>
+        </mat-form-field>
+
+        <div class="text-right">
+          <button mat-raised-button
+                  color="primary"
+                  matTooltip="{{ 'Back' | translate }}"
+                  matTooltipShowDelay="500"
+                  matTooltipHideDelay="1000"
+                  matStepperPrevious>
+            <i class="fa fa-backward"
+               aria-hidden="true"></i>
+            {{ 'Back' | translate }}
+          </button>
+          <button mat-raised-button
+                  [disabled]="descriptionForm.invalid"
+                  [ngClass]="{'add-dialog__button_disabled': descriptionForm.invalid}"
+                  color="primary"
+                  matTooltip="{{ 'Next' | translate }}"
+                  matTooltipShowDelay="500"
+                  matTooltipHideDelay="1000"
+                  matStepperNext>
+            <i class="fa fa-forward"
+               aria-hidden="true"></i>
+            {{ 'Next' | translate }}
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="inputForm">
+      <form [formGroup]="inputForm">
+        <ng-template matStepLabel>
+          <em class="text-primary">{{'AddDialogTitleInput' | translate}}</em>
+        </ng-template>
+        <mat-form-field class="add-dialog__field_size">
+          <input matInput #hostInput
+                 maxlength="15"
+                 minlength="7"
+                 placeholder="{{'InputHost' | translate}}"
+                 formControlName="host" required>
+          <mat-hint align="end">{{hostInput.value.length}} / 15</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="add-dialog__field_size">
+          <input matInput #portInput
+                 maxlength="5"
+                 placeholder="{{'InputPort' | translate}}"
+                 formControlName="port" required>
+          <mat-hint align="end">{{portInput.value.length}} / 5</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="add-dialog__field_size"
+                        *ngIf="isInputAmqpType()">
+          <input matInput #userInput
+                 maxlength="100"
+                 minlength="3"
+                 placeholder="{{'InputUser' | translate}}"
+                 formControlName="user" required>
+          <mat-hint align="end">{{userInput.value.length}} / 100</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="add-dialog__field_size"
+                        *ngIf="isInputAmqpType()">
+          <input matInput #passwordInput
+                 type="password"
+                 maxlength="100"
+                 minlength="3"
+                 placeholder="{{'InputPassword' | translate}}"
+                 formControlName="password" required>
+          <mat-hint align="end">{{passwordInput.value.length}} / 100</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="add-dialog__field_size"
+                        *ngIf="isInputAmqpType()">
+          <input matInput #vhostInput
+                 maxlength="100"
+                 minlength="3"
+                 placeholder="{{'InputVhost' | translate}}"
+                 formControlName="vhost" required>
+          <mat-hint align="end">{{vhostInput.value.length}} / 100</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="add-dialog__field_size"
+                        *ngIf="isInputAmqpType()">
+          <input matInput #exchangeInput
+                 maxlength="100"
+                 minlength="3"
+                 placeholder="{{'InputExchange' | translate}}"
+                 formControlName="exchange" required>
+          <mat-hint align="end">{{exchangeInput.value.length}} / 100</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="add-dialog__field_size"
+                        *ngIf="isInputAmqpType()">
+          <input matInput #queueInput
+                 maxlength="100"
+                 minlength="3"
+                 placeholder="{{'InputQueue' | translate}}"
+                 formControlName="queue" required>
+          <mat-hint align="end">{{queueInput.value.length}} / 100</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="add-dialog__field_size"
+                        *ngIf="isInputAmqpType()">
+          <input matInput #routingKeyInput
+                 maxlength="100"
+                 minlength="3"
+                 placeholder="{{'InputRoutingKey' | translate}}"
+                 formControlName="routingKey" required>
+          <mat-hint align="end">{{routingKeyInput.value.length}} / 100</mat-hint>
+        </mat-form-field>
+
+        <div class="text-right">
+          <button mat-raised-button
+                  color="primary"
+                  matTooltip="{{ 'Back' | translate }}"
+                  matTooltipShowDelay="500"
+                  matTooltipHideDelay="1000"
+                  matStepperPrevious>
+            <i class="fa fa-backward"
+               aria-hidden="true"></i>
+            {{ 'Back' | translate }}
+          </button>
+          <button mat-raised-button
+                  [disabled]="inputForm.invalid"
+                  [ngClass]="{'add-dialog__button_disabled': inputForm.invalid}"
+                  color="primary"
+                  matTooltip="{{ 'Next' | translate }}"
+                  matTooltipShowDelay="500"
+                  matTooltipHideDelay="1000"
+                  matStepperNext>
+            <i class="fa fa-forward"
+               aria-hidden="true"></i>
+            {{ 'Next' | translate }}
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="outputForm">
+      <form [formGroup]="outputForm">
+        <ng-template matStepLabel>
+          <em class="text-primary">{{'AddDialogTitleOutput' | translate}}</em>
+        </ng-template>
+        <mat-form-field class="add-dialog__field_size">
+          <input matInput #hostOutput
+                 maxlength="15"
+                 minlength="7"
+                 placeholder="{{'OutputHost' | translate}}"
+                 formControlName="host" required>
+          <mat-hint align="end">{{hostOutput.value.length}} / 15</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="add-dialog__field_size">
+          <input matInput #portOutput
+                 maxlength="5"
+                 placeholder="{{'OutputPort' | translate}}"
+                 formControlName="port" required>
+          <mat-hint align="end">{{portOutput.value.length}} / 5</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="add-dialog__field_size"
+                        *ngIf="isOutputAmqpType()">
+          <input matInput #userOutput
+                 maxlength="100"
+                 minlength="3"
+                 placeholder="{{'OutputUser' | translate}}"
+                 formControlName="user" required>
+          <mat-hint align="end">{{userOutput.value.length}} / 100</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="add-dialog__field_size"
+                        *ngIf="isOutputAmqpType()">
+          <input matInput #passwordOutput
+                 type="password"
+                 maxlength="100"
+                 minlength="3"
+                 placeholder="{{'OutputPassword' | translate}}"
+                 formControlName="password" required>
+          <mat-hint align="end">{{passwordOutput.value.length}} / 100</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="add-dialog__field_size"
+                        *ngIf="isOutputAmqpType()">
+          <input matInput #vhostOutput
+                 maxlength="100"
+                 minlength="3"
+                 placeholder="{{'OutputVhost' | translate}}"
+                 formControlName="vhost" required>
+          <mat-hint align="end">{{vhostOutput.value.length}} / 100</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="add-dialog__field_size"
+                        *ngIf="isOutputAmqpType()">
+          <input matInput #exchangeOutput
+                 maxlength="100"
+                 minlength="3"
+                 placeholder="{{'OutputExchange' | translate}}"
+                 formControlName="exchange" required>
+          <mat-hint align="end">{{exchangeOutput.value.length}} / 100</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="add-dialog__field_size"
+                        *ngIf="isOutputAmqpType()">
+          <input matInput #queueOutput
+                 maxlength="100"
+                 minlength="3"
+                 placeholder="{{'OutputQueue' | translate}}"
+                 formControlName="queue" required>
+          <mat-hint align="end">{{queueOutput.value.length}} / 100</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="add-dialog__field_size"
+                        *ngIf="isOutputAmqpType()">
+          <input matInput #routingKeyOutput
+                 maxlength="100"
+                 minlength="3"
+                 placeholder="{{'OutputRoutingKey' | translate}}"
+                 formControlName="routingKey" required>
+          <mat-hint align="end">{{routingKeyOutput.value.length}} / 100</mat-hint>
+        </mat-form-field>
+
+        <div class="text-right">
+          <button mat-raised-button
+                  color="primary"
+                  matTooltip="{{ 'Back' | translate }}"
+                  matTooltipShowDelay="500"
+                  matTooltipHideDelay="1000"
+                  matStepperPrevious>
+            <i class="fa fa-backward"
+               aria-hidden="true"></i>
+            {{ 'Back' | translate }}
+          </button>
+          <button mat-raised-button
+                  [disabled]="outputForm.invalid"
+                  [ngClass]="{'add-dialog__button_disabled': outputForm.invalid}"
+                  color="primary"
+                  matTooltip="{{ 'Next' | translate }}"
+                  matTooltipShowDelay="500"
+                  matTooltipHideDelay="1000"
+                  matStepperNext>
+            <i class="fa fa-forward"
+               aria-hidden="true"></i>
+            {{ 'Next' | translate }}
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>
+        <em class="text-primary">{{ 'AddDialogTitleConfirmation' | translate }}</em>
+      </ng-template>
+      <i class="fa fa-3x fa-exclamation fa-pull-left text-danger"></i>
+      <p class="text-default">
+        <em class="text-danger">{{ 'AddDialogTitleConfirm' | translate }}</em>
+      </p>
+      <div class="text-right">
+        <button mat-raised-button
+                color="primary"
+                matTooltip="{{ 'Back' | translate }}"
+                matTooltipShowDelay="500"
+                matTooltipHideDelay="1000"
+                matStepperPrevious>
+          <i class="fa fa-backward"
+             aria-hidden="true"></i>
+          {{ 'Back' | translate }}
+        </button>
+        <button mat-raised-button
+                matTooltip="{{ 'Confirm' | translate }}"
+                matTooltipShowDelay="500"
+                matTooltipHideDelay="1000"
+                color="warn"
+                (click)="onOk()">
+          <i class="fa fa-check"
+             aria-hidden="true"></i>
+          {{'Confirm' | translate}}
+        </button>
+      </div>
+    </mat-step>
+  </mat-vertical-stepper>
+</div>
+<div mat-dialog-actions
+     class="add-dialog__actions">
+  <div class="add-dialog__actions_group text-right">
+    <button mat-raised-button cdkFocusInitial
+            matTooltip="{{ 'Cancel' | translate }}"
+            matTooltipPosition="above"
+            matTooltipShowDelay="500"
+            matTooltipHideDelay="1000"
+            color="primary"
+            (click)="onCancel()">
+      <i class="fa fa-times"
+         aria-hidden="true"></i>
+      {{'Cancel' | translate}}
+    </button>
+  </div>
+</div>

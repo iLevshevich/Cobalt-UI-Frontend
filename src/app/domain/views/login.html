@@ -1,0 +1,65 @@
+<div class="login">
+  <div class="login__title">
+    <hr class="login__title_hr">
+    <div id="login__title_value">
+      <h2>{{ 'Login' | translate }}</h2>
+    </div>
+  </div>
+
+  <form class="login__form"
+        [formGroup]="loginForm"
+        #ngForm="ngForm"
+        (ngSubmit)="onLogin()">
+    <div class="form-group login__form_fields">
+      <label for="username">{{ 'Username' | translate }}</label>
+      <div class="input-group">
+        <div class="input-group-prepend"
+             [ngClass]="{ 'is-invalid': ngForm.submitted && loginForm.controls.username.errors }">
+                <span class="input-group-text">
+                  <i class="fa fa-user"></i>
+                </span>
+        </div>
+        <input type="text"
+               formControlName="username"
+               class="form-control"
+               maxlength="100"
+               [ngClass]="{ 'is-invalid': ngForm.submitted && loginForm.controls.username.errors }"/>
+        <div *ngIf="ngForm.submitted && loginForm.controls.username.errors"
+             class="invalid-feedback">
+          <div *ngIf="loginForm.controls.username.errors.required">{{ 'Required' | translate }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group login__form_fields">
+      <label for="password">{{ 'Password' | translate }}</label>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="fa fa-lock"></i>
+          </span>
+        </div>
+        <input type="password"
+               formControlName="password"
+               class="form-control"
+               maxlength="100"
+               [ngClass]="{ 'is-invalid': ngForm.submitted && loginForm.controls.password.errors }"/>
+        <div *ngIf="ngForm.submitted && loginForm.controls.password.errors"
+             class="invalid-feedback">
+          <div *ngIf="loginForm.controls.password.errors.required">{{ 'Required' | translate }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group text-right login__form_button">
+      <button mat-raised-button
+              color="primary"
+              class="btn btn-primary"
+              [disabled]="isLock(GLOBAL_ID, LOGIN_OPERATION) || (ngForm.submitted && loginForm.invalid)"
+              [ngClass]="{ 'btn-disabled': ngForm.submitted && loginForm.controls.password.errors }">
+        <i *ngIf="isLock(GLOBAL_ID, LOGIN_OPERATION)"
+           class="fa fa-spinner fa-spin"
+           aria-hidden="true"></i>
+        {{ 'Signin' | translate }}
+      </button>
+    </div>
+  </form>
+</div>

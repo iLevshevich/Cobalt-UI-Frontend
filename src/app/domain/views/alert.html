@@ -1,0 +1,13 @@
+<div *ngFor="let alert of alerts"
+     class="alert-outlet__alert alert {{getCssClass(alert)}} alert-dismissable"
+     role="alert">
+  <a class="alert-outlet__alert_close close float-right"
+     (click)="removeAlert(alert)">
+    &times;
+  </a>
+  <div class="alert-outlet__alert_message">
+    <i class="alert-outlet__alert_icon fa fa-3x {{getIconClass(alert)}} fa-pull-left"></i>
+    <h4 class="alert-outlet__alert_title alert-heading">{{getMessageType(alert)}}</h4>
+    <p class="alert-outlet__alert_body">{{alert.message}}</p>
+  </div>
+</div>

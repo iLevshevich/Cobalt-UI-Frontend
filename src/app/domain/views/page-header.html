@@ -1,0 +1,13 @@
+<nav class="page-header__navbar navbar navbar-light bg-light">
+  <div class="page-header__title navbar-brand">
+    <h2 class="text-muted">Cobalt</h2>
+  </div>
+  <div class="page-header__lang btn-group">
+    <button *ngFor="let lang of supportedLangs"
+            class="btn btn-default btn-clear"
+            (click)="setLang(lang.value); setCookie(lang.value);"
+            [class.btn-primary]="isLangEquals(lang.value)">
+      {{ lang.display }}
+    </button>
+  </div>
+</nav>

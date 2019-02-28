@@ -1,0 +1,113 @@
+<div mat-dialog-title
+     class="details-dialog__title">
+  <p class="details-dialog__title_message text-default text-center">
+    <strong>{{'DetailsDialogTitle' | translate}}</strong>
+  </p>
+</div>
+<div mat-dialog-content
+     class="details-dialog__body text-default">
+  <dl class="dl-horizontal">
+    <mat-divider></mat-divider>
+    <dt>{{'Type' | translate}}:</dt>
+    <dd>
+      <em class="text-info">{{getElement().type | type}}</em>
+    </dd>
+    <dt>
+      {{'Description' | translate}}:
+    </dt>
+    <dd>
+      <em class="text-info">{{getElement().description}}</em>
+    </dd>
+    <mat-divider></mat-divider>
+    <dt>
+      {{'InputHost' | translate}}:
+    </dt>
+    <dd>
+      <em class="text-info">{{getElement().input.host}}</em>
+    </dd>
+    <dt>
+      {{'InputPort' | translate}}:
+    </dt>
+    <dd>
+      <em class="text-info">{{getElement().input.port}}</em>
+    </dd>
+    <dt *ngIf="isInputAmqpType()">
+      {{'InputVhost' | translate}}:
+    </dt>
+    <dd *ngIf="isInputAmqpType()">
+      <em class="text-info">{{getElement().input.vhost}}</em>
+    </dd>
+    <dt *ngIf="isInputAmqpType()">
+      {{'InputExchange' | translate}}:
+    </dt>
+    <dd *ngIf="isInputAmqpType()">
+      <em class="text-info">{{getElement().input.exchange}}</em>
+    </dd>
+    <dt *ngIf="isInputAmqpType()">
+      {{'InputQueue' | translate}}:
+    </dt>
+    <dd *ngIf="isInputAmqpType()">
+      <em class="text-info">{{getElement().input.queue}}</em>
+    </dd>
+    <dt *ngIf="isInputAmqpType()">
+      {{'InputRoutingKey' | translate}}:
+    </dt>
+    <dd *ngIf="isInputAmqpType()">
+      <em class="text-info">{{getElement().input.routing_key}}</em>
+    </dd>
+    <mat-divider></mat-divider>
+    <dt>
+      {{'OutputHost' | translate}}:
+    </dt>
+    <dd>
+      <em class="text-info">{{getElement().output.host}}</em>
+    </dd>
+    <dt>
+      {{'OutputPort' | translate}}:
+    </dt>
+    <dd>
+      <em class="text-info">{{getElement().output.port}}</em>
+    </dd>
+    <dt *ngIf="isOutputAmqpType()">
+      {{'OutputVhost' | translate}}:
+    </dt>
+    <dd *ngIf="isOutputAmqpType()">
+      <em class="text-info">{{getElement().output.vhost}}</em>
+    </dd>
+    <dt *ngIf="isOutputAmqpType()">
+      {{'OutputExchange' | translate}}:
+    </dt>
+    <dd *ngIf="isOutputAmqpType()">
+      <em class="text-info">{{getElement().output.exchange}}</em>
+    </dd>
+    <dt *ngIf="isOutputAmqpType()">
+      {{'OutputQueue' | translate}}:
+    </dt>
+    <dd *ngIf="isOutputAmqpType()">
+      <em class="text-info">{{getElement().output.queue}}</em>
+    </dd>
+    <dt *ngIf="isOutputAmqpType()">
+      {{'OutputRoutingKey' | translate}}:
+    </dt>
+    <dd *ngIf="isOutputAmqpType()">
+      <em class="text-info">{{getElement().output.routing_key}}</em>
+    </dd>
+    <mat-divider></mat-divider>
+  </dl>
+</div>
+<div mat-dialog-actions
+     class="details-dialog__actions">
+  <div class="details-dialog__actions_group text-right">
+    <button mat-raised-button cdkFocusInitial
+            matTooltip="{{ 'Close' | translate }}"
+            matTooltipPosition="above"
+            matTooltipShowDelay="500"
+            matTooltipHideDelay="1000"
+            color="primary"
+            (click)="onCancel()">
+      <i class="fa fa-times"
+         aria-hidden="true"></i>
+      {{'Close' | translate}}
+    </button>
+  </div>
+</div>

@@ -1,0 +1,496 @@
+<table mat-table
+       [dataSource]="getDispatchers()">
+
+  <ng-container matColumnDef="header-empty-cell">
+    <th mat-header-cell *matHeaderCellDef></th>
+  </ng-container>
+
+  <ng-container matColumnDef="header-operation-left-cell">
+    <th mat-header-cell *matHeaderCellDef
+        class="text-left header-operation-left-cell__th_size">
+      <mat-button-toggle-group>
+        <mat-button-toggle value="Refresh"
+                           class="mat-button-toggle__button_size"
+                           (change)="onChange($event.value)">
+          <i *ngIf="isLock(GLOBAL_ID, REFRESH_OPERATION)"
+             class="fa fa-2x fa-spinner fa-spin"
+             aria-hidden="true"></i>
+          <i *ngIf="!isLock(GLOBAL_ID, REFRESH_OPERATION)"
+             class="fa fa-2x fa-refresh text-primary"
+             aria-hidden="true"
+             matTooltip="{{ 'Refresh' | translate }}"
+             matTooltipPosition="below"
+             matTooltipShowDelay="500"
+             matTooltipHideDelay="1000"></i>
+        </mat-button-toggle>
+        <mat-button-toggle *ngIf="isAllowOperation(ADD_DISPATCHER)"
+                           value="Add"
+                           class="mat-button-toggle__button_size"
+                           (change)="onChangeOne($event.value)">
+          <i *ngIf="isLock(GLOBAL_ID, ADD_ONE_OPERATION)"
+             class="fa fa-2x fa-spinner fa-spin"
+             aria-hidden="true"></i>
+          <i *ngIf="!isLock(GLOBAL_ID, ADD_ONE_OPERATION)"
+             class="fa fa-2x fa-plus text-success"
+             aria-hidden="true"
+             matTooltip="{{ 'Create' | translate }}"
+             matTooltipPosition="below"
+             matTooltipShowDelay="500"
+             matTooltipHideDelay="1000"></i>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </th>
+  </ng-container>
+
+  <ng-container matColumnDef="header-operation-right-cell">
+    <th mat-header-cell *matHeaderCellDef
+        class="text-right">
+      <mat-button-toggle-group *ngIf="isAllowDispatchersOperation()">
+        <mat-button-toggle *ngIf="isAllowOperation(START_DISPATCHERS)"
+                           value="Run"
+                           class="mat-button-toggle__button_size"
+                           (change)="onChange($event.value)"
+                           [disabled]="!stopped">
+          <i *ngIf="isLock(GLOBAL_ID, START_ALL_OPERATION)"
+             class="fa fa-2x fa-spinner fa-spin"
+             aria-hidden="true"></i>
+          <i *ngIf="!isLock(GLOBAL_ID, START_ALL_OPERATION)"
+             class="fa fa-2x fa-play"
+             [ngClass]="{'text-primary': stopped, 'mat-button-toggle-disabled__label_disabled': !stopped}"
+             aria-hidden="true"
+             matTooltip="{{ 'Run' | translate }}"
+             matTooltipPosition="below"
+             matTooltipShowDelay="500"
+             matTooltipHideDelay="1000"></i>
+        </mat-button-toggle>
+        <mat-button-toggle *ngIf="isAllowOperation(RESET_DISPATCHERS)"
+                           value="Reset"
+                           class="mat-button-toggle__button_size"
+                           (change)="onChange($event.value)"
+                           [disabled]="!aborted">
+          <i *ngIf="isLock(GLOBAL_ID, RESET_ALL_OPERATION)"
+             class="fa fa-2x fa-spinner fa-spin"
+             aria-hidden="true"></i>
+          <i *ngIf="!isLock(GLOBAL_ID, RESET_ALL_OPERATION)"
+             class="fa fa-2x fa-forward"
+             [ngClass]="{'text-info': aborted, 'mat-button-toggle-disabled__label_disabled': !aborted}"
+             aria-hidden="true"
+             matTooltip="{{ 'Reset' | translate }}"
+             matTooltipPosition="below"
+             matTooltipShowDelay="500"
+             matTooltipHideDelay="1000"></i>
+        </mat-button-toggle>
+        <mat-button-toggle *ngIf="isAllowOperation(ABORT_DISPATCHERS)"
+                           value="Abort"
+                           class="mat-button-toggle__button_size"
+                           (change)="onChange($event.value)"
+                           [disabled]="!running">
+          <i *ngIf="isLock(GLOBAL_ID, ABORT_ALL_OPERATION)"
+             class="fa fa-2x fa-spinner fa-spin"
+             aria-hidden="true"></i>
+          <i *ngIf="!isLock(GLOBAL_ID, ABORT_ALL_OPERATION)"
+             class="fa fa-2x fa-pause"
+             [ngClass]="{'text-warning': running, 'mat-button-toggle-disabled__label_disabled': !running}"
+             aria-hidden="true"
+             matTooltip="{{ 'Abort' | translate }}"
+             matTooltipPosition="below"
+             matTooltipShowDelay="500"
+             matTooltipHideDelay="1000"></i>
+        </mat-button-toggle>
+        <mat-button-toggle *ngIf="isAllowOperation(STOP_DISPATCHERS)"
+                           value="Stop"
+                           class="mat-button-toggle__button_size"
+                           (change)="onChange($event.value)"
+                           [disabled]="!aborted">
+          <i *ngIf="isLock(GLOBAL_ID, STOP_ALL_OPERATION)"
+             class="fa fa-2x fa-spinner fa-spin"
+             aria-hidden="true"></i>
+          <i *ngIf="!isLock(GLOBAL_ID, STOP_ALL_OPERATION)"
+             class="fa fa-2x fa-stop"
+             [ngClass]="{'text-danger': aborted, 'mat-button-toggle-disabled__label_disabled': !aborted}"
+             aria-hidden="true"
+             matTooltip="{{ 'Stop' | translate }}"
+             matTooltipPosition="below"
+             matTooltipShowDelay="500"
+             matTooltipHideDelay="1000"></i>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </th>
+  </ng-container>
+
+  <ng-container matColumnDef="header-shutdown-cell">
+    <th mat-header-cell *matHeaderCellDef
+        class="text-left shutdown-cell__label">
+      <button mat-raised-button *ngIf="isAllowOperation(SHUTDOWN_DISPATCHER)"
+              class="text-danger shutdown-cell__button shutdown-cell__button_size"
+              (click)="onShutdown()">
+        <i *ngIf="isLock(GLOBAL_ID, SHUTDOWN_OPERATION)"
+           class="fa fa-2x fa-spinner fa-spin"
+           aria-hidden="true"></i>
+        <i *ngIf="!isLock(GLOBAL_ID, SHUTDOWN_OPERATION)"
+           class="fa fa-2x fa-power-off"
+           aria-hidden="true"
+           matTooltip="{{ 'Shutdown' | translate }}"
+           matTooltipPosition="after"
+           matTooltipShowDelay="500"
+           matTooltipHideDelay="1000"></i>
+      </button>
+    </th>
+  </ng-container>
+
+  <ng-container matColumnDef="header-description-cell">
+    <th mat-header-cell *matHeaderCellDef
+        class="text-center text-muted">
+      <h4>
+        <strong>{{ 'Description' | translate }}</strong>
+      </h4>
+    </th>
+  </ng-container>
+
+  <ng-container matColumnDef="header-type-cell">
+    <th mat-header-cell *matHeaderCellDef
+        class="text-center text-muted">
+      <h4>
+        <strong>{{ 'Type' | translate }}</strong>
+      </h4>
+    </th>
+  </ng-container>
+
+  <ng-container matColumnDef="header-performance-cell">
+    <th mat-header-cell *matHeaderCellDef="let element"
+        class="text-center text-muted">
+      <h4>
+        <strong>{{ 'Performance' | translate }}</strong>
+      </h4>
+    </th>
+  </ng-container>
+
+  <ng-container matColumnDef="header-queue-cell">
+    <th mat-header-cell *matHeaderCellDef="let element"
+        class="text-center text-muted">
+      <h4>
+        <strong>{{ 'Queue' | translate }}</strong>
+      </h4>
+    </th>
+  </ng-container>
+
+  <ng-container matColumnDef="header-state-cell">
+    <th mat-header-cell *matHeaderCellDef
+        class="text-center text-muted">
+      <h4>
+        <strong>{{ 'State' | translate }}</strong>
+      </h4>
+    </th>
+  </ng-container>
+
+  <ng-container matColumnDef="header-operations-cell">
+    <th mat-header-cell *matHeaderCellDef
+        class="text-center text-muted header-state-cell__label_size">
+      <h4>
+        <strong>{{ 'Operations' | translate }}</strong>
+      </h4>
+    </th>
+  </ng-container>
+
+  <ng-container matColumnDef="details-cell">
+    <td mat-cell *matCellDef="let element"
+        class="text-left details-cell__label">
+      <button mat-raised-button
+              class="text-info details-cell__button details-cell__button_size"
+              (click)="onDetails(element)">
+        <i class="fa fa-2x fa-search"
+           aria-hidden="true"
+           matTooltip="{{ 'DetailsView' | translate }}"
+           matTooltipPosition="after"
+           matTooltipShowDelay="500"
+           matTooltipHideDelay="1000"></i>
+      </button>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="description-cell">
+    <td mat-cell *matCellDef="let element"
+        class="text-center text-info description-cell__label_size">
+      <em>{{element.description}}</em>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="type-cell">
+    <td mat-cell *matCellDef="let element"
+        class="text-center text-info text-nowrap">
+      <strong>{{element.type | type}}</strong>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="performance-cell">
+    <td mat-cell *matCellDef="let element"
+        class="text-center text-info">
+      <strong class="text-help"
+              matTooltip="{{ 'LastRequestSpeed' | translate }}"
+              matTooltipPosition="before"
+              matTooltipShowDelay="500"
+              matTooltipHideDelay="1000">
+        {{element.performance.total | performance:element.performance.type}}
+      </strong>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="queue-cell">
+    <td mat-cell *matCellDef="let element"
+        class="text-center text-info">
+      <strong class="text-help"
+              matTooltip="{{ 'QueueLength' | translate }}"
+              matTooltipPosition="before"
+              matTooltipShowDelay="500"
+              matTooltipHideDelay="1000">
+        {{element.queue.size}}
+      </strong>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="state-cell">
+    <td mat-cell *matCellDef="let element"
+        class="text-center"
+        [ngClass]="{'text-primary': isDispatcherRunning(element), 'text-warning': isDispatcherAborted(element), 'text-danger': isDispatcherStopped(element)}">
+      <i class="fa fa-2x text-help"
+         [ngClass]="{'fa-play': isDispatcherRunning(element), 'fa-pause': isDispatcherAborted(element), 'fa-stop': isDispatcherStopped(element)}"
+         aria-hidden="true"
+         matTooltip="{{ {'Running': isDispatcherRunning(element), 'Aborted': isDispatcherAborted(element), 'Stopped': isDispatcherStopped(element)} | translate_state }}"
+         matTooltipPosition="before"
+         matTooltipShowDelay="500"
+         matTooltipHideDelay="1000"></i>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="operations-cell">
+    <td mat-cell *matCellDef="let element"
+        class="operations-cell__label">
+      <div *ngIf="!isAllowDispatchersOperation()"
+           class="text-center">
+        <i *ngIf="!isAllowDispatchersOperation()"
+           class="fa fa-2x fa-ban text-danger text-help"
+           aria-hidden="true"
+           matTooltip="{{ 'Unavailable' | translate }}"
+           matTooltipPosition="before"
+           matTooltipShowDelay="500"
+           matTooltipHideDelay="1000"></i>
+      </div>
+      <div *ngIf="isAllowDispatchersOperation()"
+           class="text-right">
+        <mat-button-toggle-group *ngIf="isAllowDispatchersOperation()">
+          <mat-button-toggle *ngIf="isAllowOperation(START_DISPATCHER)"
+                             value="Run"
+                             class="mat-button-toggle__button_size"
+                             (change)="onChangeOne($event.value, element)"
+                             [disabled]="!isDispatcherStopped(element)">
+            <i *ngIf="isLock(element.id, START_ONE_OPERATION)"
+               class="fa fa-2x fa-spinner fa-spin"
+               aria-hidden="true"></i>
+            <i *ngIf="!isLock(element.id, START_ONE_OPERATION)"
+               class="fa fa-2x fa-play"
+               [ngClass]="{'text-primary': isDispatcherStopped(element), 'mat-button-toggle-disabled__label_disabled': !isDispatcherStopped(element)}"
+               aria-hidden="true"
+               matTooltip="{{ 'Run' | translate }}"
+               matTooltipPosition="below"
+               matTooltipShowDelay="500"
+               matTooltipHideDelay="1000"></i>
+          </mat-button-toggle>
+          <mat-button-toggle *ngIf="isAllowOperation(RESET_DISPATCHER)"
+                             value="Reset"
+                             class="mat-button-toggle__button_size"
+                             (change)="onChangeOne($event.value, element)"
+                             [disabled]="!isDispatcherAborted(element)">
+            <i *ngIf="isLock(element.id, RESET_ONE_OPERATION)"
+               class="fa fa-2x fa-spinner fa-spin"
+               aria-hidden="true"></i>
+            <i *ngIf="!isLock(element.id, RESET_ONE_OPERATION)"
+               class="fa fa-2x fa-forward"
+               [ngClass]="{'text-info': isDispatcherAborted(element), 'mat-button-toggle-disabled__label_disabled': !isDispatcherAborted(element)}"
+               aria-hidden="true"
+               matTooltip="{{ 'Reset' | translate }}"
+               matTooltipPosition="below"
+               matTooltipShowDelay="500"
+               matTooltipHideDelay="1000"></i>
+          </mat-button-toggle>
+          <mat-button-toggle *ngIf="isAllowOperation(ABORT_DISPATCHER)"
+                             value="Abort"
+                             class="mat-button-toggle__button_size"
+                             (change)="onChangeOne($event.value, element)"
+                             [disabled]="!isDispatcherRunning(element)">
+            <i *ngIf="isLock(element.id, ABORT_ONE_OPERATION)"
+               class="fa fa-2x fa-spinner fa-spin"
+               aria-hidden="true"></i>
+            <i *ngIf="!isLock(element.id, ABORT_ONE_OPERATION)"
+               class="fa fa-2x fa-pause"
+               [ngClass]="{'text-warning': isDispatcherRunning(element), 'mat-button-toggle-disabled__label_disabled': !isDispatcherRunning(element)}"
+               aria-hidden="true"
+               matTooltip="{{ 'Abort' | translate }}"
+               matTooltipPosition="below"
+               matTooltipShowDelay="500"
+               matTooltipHideDelay="1000"></i>
+          </mat-button-toggle>
+          <mat-button-toggle *ngIf="isAllowOperation(STOP_DISPATCHER)"
+                             value="Stop"
+                             class="mat-button-toggle__button_size"
+                             (change)="onChangeOne($event.value, element)"
+                             [disabled]="(!isDispatcherAborted(element) || !isDispatcherQueueEmpty(element))">
+            <i *ngIf="isLock(element.id, STOP_ONE_OPERATION)"
+               class="fa fa-2x fa-spinner fa-spin"
+               aria-hidden="true"></i>
+            <i *ngIf="!isLock(element.id, STOP_ONE_OPERATION)"
+               class="fa fa-2x fa-stop"
+               [ngClass]="{'text-danger': (isDispatcherAborted(element) && isDispatcherQueueEmpty(element)), 'mat-button-toggle-disabled__label_disabled': (!isDispatcherAborted(element) || !isDispatcherQueueEmpty(element))}"
+               aria-hidden="true"
+               matTooltip="{{ 'Stop' | translate }}"
+               matTooltipPosition="below"
+               matTooltipShowDelay="500"
+               matTooltipHideDelay="1000"></i>
+          </mat-button-toggle>
+          <mat-button-toggle
+            *ngIf="isAllowOperation(REMOVE_DISPATCHER) && isDispatcherStopped(element) && isDispatcherQueueEmpty(element)"
+            value="Remove"
+            class="mat-button-toggle__button_size"
+            (change)="onChangeOne($event.value, element)">
+            <i *ngIf="isLock(element.id, REMOVE_ONE_OPERATION)"
+               class="fa fa-2x fa-spinner fa-spin"
+               aria-hidden="true"></i>
+            <i *ngIf="!isLock(element.id, REMOVE_ONE_OPERATION)"
+               class="fa fa-2x fa-minus"
+               [ngClass]="{'text-danger': isDispatcherStopped(element), 'mat-button-toggle-disabled__label_disabled': !isDispatcherStopped(element)}"
+               aria-hidden="true"
+               matTooltip="{{ 'Remove' | translate }}"
+               matTooltipPosition="below"
+               matTooltipShowDelay="500"
+               matTooltipHideDelay="1000"></i>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="footer-empty-cell">
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
+
+  <ng-container matColumnDef="footer-operation-left-cell">
+    <th mat-footer-cell *matFooterCellDef
+        class="text-left">
+      <mat-button-toggle-group>
+        <mat-button-toggle value="Refresh"
+                           class="mat-button-toggle__button_size"
+                           (change)="onChange($event.value)">
+          <i *ngIf="isLock(GLOBAL_ID, REFRESH_OPERATION)"
+             class="fa fa-2x fa-spinner fa-spin"
+             aria-hidden="true"></i>
+          <i *ngIf="!isLock(GLOBAL_ID, REFRESH_OPERATION)"
+             class="fa fa-2x fa-refresh text-primary"
+             aria-hidden="true"
+             matTooltip="{{ 'Refresh' | translate }}"
+             matTooltipPosition="below"
+             matTooltipShowDelay="500"
+             matTooltipHideDelay="1000"></i>
+        </mat-button-toggle>
+        <mat-button-toggle *ngIf="isAllowOperation(ADD_DISPATCHER)"
+                           value="Add"
+                           class="mat-button-toggle__button_size"
+                           (change)="onChangeOne($event.value)">
+          <i *ngIf="isLock(GLOBAL_ID, ADD_ONE_OPERATION)"
+             class="fa fa-2x fa-spinner fa-spin"
+             aria-hidden="true"></i>
+          <i *ngIf="!isLock(GLOBAL_ID, ADD_ONE_OPERATION)"
+             class="fa fa-2x fa-plus text-success"
+             aria-hidden="true"
+             matTooltip="{{ 'Create' | translate }}"
+             matTooltipPosition="below"
+             matTooltipShowDelay="500"
+             matTooltipHideDelay="1000"></i>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </th>
+  </ng-container>
+
+  <ng-container matColumnDef="footer-operation-right-cell">
+    <td mat-footer-cell *matFooterCellDef
+        class="text-right">
+      <mat-button-toggle-group *ngIf="isAllowDispatchersOperation()">
+        <mat-button-toggle *ngIf="isAllowOperation(START_DISPATCHERS)"
+                           value="Run"
+                           class="mat-button-toggle__button_size"
+                           (change)="onChange($event.value)"
+                           [disabled]="!stopped">
+          <i *ngIf="isLock(GLOBAL_ID, START_ALL_OPERATION)"
+             class="fa fa-2x fa-spinner fa-spin"
+             aria-hidden="true"></i>
+          <i *ngIf="!isLock(GLOBAL_ID, START_ALL_OPERATION)"
+             class="fa fa-2x fa-play"
+             [ngClass]="{'text-primary': stopped, 'mat-button-toggle-disabled__label_disabled': !stopped}"
+             aria-hidden="true"
+             matTooltip="{{ 'Run' | translate }}"
+             matTooltipPosition="below"
+             matTooltipShowDelay="500"
+             matTooltipHideDelay="1000"></i>
+        </mat-button-toggle>
+        <mat-button-toggle *ngIf="isAllowOperation(RESET_DISPATCHERS)"
+                           value="Reset"
+                           class="mat-button-toggle__button_size"
+                           (change)="onChange($event.value)"
+                           [disabled]="!aborted">
+          <i *ngIf="isLock(GLOBAL_ID, RESET_ALL_OPERATION)"
+             class="fa fa-2x fa-spinner fa-spin"
+             aria-hidden="true"></i>
+          <i *ngIf="!isLock(GLOBAL_ID, RESET_ALL_OPERATION)"
+             class="fa fa-2x fa-forward"
+             [ngClass]="{'text-info': aborted, 'mat-button-toggle-disabled__label_disabled': !aborted}"
+             aria-hidden="true"
+             matTooltip="{{ 'Reset' | translate }}"
+             matTooltipPosition="below"
+             matTooltipShowDelay="500"
+             matTooltipHideDelay="1000"></i>
+        </mat-button-toggle>
+        <mat-button-toggle *ngIf="isAllowOperation(ABORT_DISPATCHERS)"
+                           value="Abort"
+                           class="mat-button-toggle__button_size"
+                           (change)="onChange($event.value)"
+                           [disabled]="!running">
+          <i *ngIf="isLock(GLOBAL_ID, ABORT_ALL_OPERATION)"
+             class="fa fa-2x fa-spinner fa-spin"
+             aria-hidden="true"></i>
+          <i *ngIf="!isLock(GLOBAL_ID, ABORT_ALL_OPERATION)"
+             class="fa fa-2x fa-pause"
+             [ngClass]="{'text-warning': running, 'mat-button-toggle-disabled__label_disabled': !running}"
+             aria-hidden="true"
+             matTooltip="{{ 'Abort' | translate }}"
+             matTooltipPosition="below"
+             matTooltipShowDelay="500"
+             matTooltipHideDelay="1000"></i>
+        </mat-button-toggle>
+        <mat-button-toggle *ngIf="isAllowOperation(STOP_DISPATCHERS)"
+                           value="Stop"
+                           class="mat-button-toggle__button_size"
+                           (change)="onChange($event.value)"
+                           [disabled]="!aborted">
+          <i *ngIf="isLock(GLOBAL_ID, STOP_ALL_OPERATION)"
+             class="fa fa-2x fa-spinner fa-spin"
+             aria-hidden="true"></i>
+          <i *ngIf="!isLock(GLOBAL_ID, STOP_ALL_OPERATION)"
+             class="fa fa-2x fa-stop"
+             [ngClass]="{'text-danger': aborted, 'mat-button-toggle-disabled__label_disabled': !aborted}"
+             aria-hidden="true"
+             matTooltip="{{ 'Stop' | translate }}"
+             matTooltipPosition="below"
+             matTooltipShowDelay="500"
+             matTooltipHideDelay="1000"></i>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row
+      *matHeaderRowDef="['header-operation-left-cell', 'header-empty-cell', 'header-empty-cell', 'header-empty-cell', 'header-empty-cell', 'header-empty-cell', 'header-operation-right-cell']"></tr>
+  <tr mat-header-row
+      *matHeaderRowDef="['header-shutdown-cell', 'header-description-cell', 'header-type-cell', 'header-performance-cell','header-queue-cell', 'header-state-cell', 'header-operations-cell']"></tr>
+  <tr mat-row
+      *matRowDef="let row; columns: ['details-cell', 'description-cell', 'type-cell', 'performance-cell', 'queue-cell', 'state-cell', 'operations-cell']"></tr>
+  <tr mat-footer-row
+      *matFooterRowDef="['footer-operation-left-cell', 'footer-empty-cell', 'footer-empty-cell', 'footer-empty-cell', 'footer-empty-cell', 'footer-empty-cell', 'footer-operation-right-cell']"></tr>
+</table>

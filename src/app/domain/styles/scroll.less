@@ -1,0 +1,30 @@
+@import "./prototype/templates.less";
+@import "./prototype/mixins.less";
+
+.scroll-outlet__button {
+  .border-radius(300px);
+  .bordered(2px, #7D7D7D);
+
+  position: fixed;
+  z-index: 10000;
+  background-color: #626262;
+  color: #eeeeee;
+  width: 40px;
+  height: 40px;
+  line-height: 34px;
+  right: 10px;
+  bottom: 10px;
+  outline: none !important;
+  box-shadow: none;
+
+  i.fa {
+    line-height: inherit;
+  }
+}
+
+.scroll-outlet__button:hover,
+.scroll-outlet__button:focus {
+  background-color: #434343;
+  cursor: pointer;
+}
+

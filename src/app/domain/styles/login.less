@@ -1,0 +1,77 @@
+@import "./prototype/templates.less";
+@import "./prototype/mixins.less";
+
+.login {
+  clear: both;
+  margin-left: auto;
+  margin-right: auto;
+
+  .bordered(#ccc);
+  .border-radius(5px);
+  .box-shadow(0px 0px 7px -4px #6E6E6E);
+
+  width: 450px;
+  margin-top: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  .login__title {
+    .text-shadow(0px 2px 2px #C0C4C5);
+
+    text-align: center;
+    margin: 0;
+    margin-bottom: 10px;
+    color: #6a737c;
+    font-variant: small-caps;
+
+    .login__title_hr {
+      margin-bottom: 0;
+      position: relative;
+      top: 32px;
+      height: 0;
+      border: 0;
+      border-top: 1px solid #e4e6e8
+    }
+
+    #login__title_value {
+      display: inline-block;
+      position: relative;
+      padding: 10px;
+      background-color: #FFF
+    }
+
+    hr {
+      border: 0;
+      color: #9fa6ad;
+      background-color: #9fa6ad;
+      height: 1px;
+      margin-bottom: 20px;
+    }
+  }
+
+  .login__form {
+    .login__form_fields {
+      label {
+        color: #6a737c;
+        font-weight: bold
+      }
+
+      input {
+        .border-radius(5px, 5px, 0px, 0px);
+      }
+    }
+
+    .login__form_button {
+      button.btn-disabled {
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  button {
+    i {
+      margin-right: 4px;
+      color: #fff;
+    }
+  }
+}

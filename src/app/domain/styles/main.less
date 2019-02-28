@@ -1,0 +1,100 @@
+@import "./prototype/templates.less";
+@import "./prototype/mixins.less";
+
+.mat-table {
+  clear: both;
+
+  .bordered(#ccc);
+  .box-shadow(0px 0px 7px -4px #6E6E6E);
+
+  cursor: default;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 60px;
+  width: 98%;
+
+  tr:nth-child(2n) {
+    background: #f0f0f0;
+  }
+
+  .mat-row:hover {
+    td {
+      background: #e4e4e4;
+    }
+  }
+
+  .mat-header-cell {
+    padding-right: 0;
+    padding-left: 0;
+    font-size: 12px;
+  }
+
+  .header-operation-left-cell__th_size {
+    width: 108px;
+  }
+
+  .mat-cell {
+  }
+
+  .mat-footer-cell {
+    padding-right: 0;
+    padding-left: 0;
+    font-size: 12px;
+  }
+
+  .header-state-cell__label_size {
+    width: 250px;
+  }
+
+  .shutdown-cell__label,
+  .details-cell__label {
+    padding-left: 4px !important;
+  }
+
+  .operations-cell__label {
+    padding-right: 0 !important;
+  }
+
+  .description-cell__label_size {
+    max-width: 250px;
+  }
+
+  .shutdown-cell__button,
+  .details-cell__button {
+    padding: 0 !important;
+    min-width: 48px !important;
+  }
+
+  .shutdown-cell__button_size,
+  .details-cell__button_size {
+    height: 48px;
+    width: 48px;
+  }
+
+  .mat-button-toggle__button_size {
+    height: 48px;
+    width: 48px;
+  }
+
+  .mat-button-toggle-disabled__label_disabled {
+    cursor: not-allowed !important;
+    color: lightgray;
+  }
+
+  .mat-button-toggle-checked {
+    background-color: white !important;
+  }
+
+  .mat-button-toggle-group {
+    margin: 2px;
+  }
+
+  .fa-2x {
+    font-size: 24px;
+  }
+
+  .fa-spinner {
+    color: black;
+  }
+}

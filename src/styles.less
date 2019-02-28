@@ -1,0 +1,34 @@
+@import "./app/domain/styles/prototype/templates.less";
+@import "./app/domain/styles/prototype/mixins.less";
+
+.text-help {
+  cursor: help;
+}
+
+.text-default {
+  cursor: default;
+}
+
+.btn-clear {
+  cursor: hand;
+}
+
+.btn-clear:active,
+.btn-clear:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.dl-horizontal > dt {
+  float: left;
+  width: 120px;
+  overflow: hidden;
+  clear: left;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap
+}
+
+.dl-horizontal > dd {
+  margin-left: 130px
+}
