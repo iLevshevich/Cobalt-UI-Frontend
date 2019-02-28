@@ -1,4 +1,4 @@
-## Cobalt: UI
+## Cobalt: UI-Frontend
 [The part of the Cobalt project.](https://github.com/iLevshevich/Cobalt)
 
 ### Platform:
